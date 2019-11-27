@@ -29,8 +29,6 @@ namespace FSL.ApiCustomIdentity.Service
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.Id),
-                new Claim("Name", user.Name),
-                new Claim("Id", user.Id),
                 new Claim("Data", user.ToJson())
             };
 

@@ -15,7 +15,8 @@ namespace FSL.ApiCustomIdentity
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(
+            IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -29,7 +30,7 @@ namespace FSL.ApiCustomIdentity
             services.AddCors();
 
             var token = new TokenConfiguration();
-            new ConfigureFromConfigurationOptions<TokenConfiguration>(Configuration.GetSection("TokenConfiguration")).Configure(token);
+            new ConfigureFromConfigurationOptions<TokenConfiguration>(Configuration.GetSection(typeof(TokenConfiguration).Name)).Configure(token);
             services.AddSingleton(token);
 
             var siginingConfiguration = new SigningConfiguration();
@@ -41,10 +42,10 @@ namespace FSL.ApiCustomIdentity
             services.AddSingleton<ILoggedUserService, IdentityLoggedUserService>();
             services.AddControllers();
 
-            services.AddAuthentication(authOptions =>
+            services.AddAuthentication(opt =>
             {
-                authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(opt =>
             {
                 opt.TokenValidationParameters.IssuerSigningKey = siginingConfiguration.Key;
@@ -72,7 +73,9 @@ namespace FSL.ApiCustomIdentity
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(
+            IApplicationBuilder app, 
+            IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
